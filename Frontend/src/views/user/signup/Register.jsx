@@ -1,12 +1,12 @@
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from 'axios';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SignupForm() {
     const navigate = useNavigate();
-    
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,14 +14,21 @@ export default function SignupForm() {
     const [isInstructorForm, setIsInstructorForm] = useState(false);
     const [error, setError] = useState('');
 
+    // 🔁 Automatically update role based on form type
+    useEffect(() => {
+        setRole(isInstructorForm ? "instructor" : "user");
+    }, [isInstructorForm]);
+
     const handleSubmit = async (e) => {
+        console.log("Sending data:", { username, email, password, role });
+
         e.preventDefault();
         try {
             const resp = await axios.post('http://127.0.0.1:3000/user/register', {
                 username,
                 email,
                 password,
-                role  // Send role dynamically
+                role  
             });
             localStorage.setItem('token', resp.data.token);
             navigate("/profile");
@@ -46,7 +53,7 @@ export default function SignupForm() {
                 <h2 className="mb-6 text-center text-3xl font-bold text-white drop-shadow-lg">
                     {isInstructorForm ? "Become an Instructor" : "Create Your Account"}
                 </h2>
-                
+
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <motion.input
                         whileFocus={{ scale: 1.02 }}
@@ -72,7 +79,7 @@ export default function SignupForm() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3 text-white placeholder-gray-300 focus:border-yellow-400 focus:outline-none"
                     />
-                    
+
                     {isInstructorForm && (
                         <motion.input
                             whileFocus={{ scale: 1.02 }}
@@ -81,7 +88,7 @@ export default function SignupForm() {
                             className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3 text-white placeholder-gray-300 focus:border-yellow-400 focus:outline-none"
                         />
                     )}
-                    
+
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         className="w-full rounded-xl bg-yellow-500 px-4 py-3 text-gray-900 font-bold transition hover:bg-yellow-600 shadow-lg"
@@ -89,13 +96,13 @@ export default function SignupForm() {
                         {isInstructorForm ? "Apply as Instructor" : "Sign Up"}
                     </motion.button>
                 </form>
-                
+
                 <div className="my-6 flex items-center">
                     <div className="h-px flex-1 bg-white/30"></div>
                     <span className="mx-4 text-white/80">or</span>
                     <div className="h-px flex-1 bg-white/30"></div>
                 </div>
-                
+
                 <div className="flex flex-col space-y-3">
                     <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -110,15 +117,12 @@ export default function SignupForm() {
                         <FaGithub className="text-gray-300" /> Sign up with GitHub
                     </motion.button>
                 </div>
-                
+
                 <p className="mt-6 text-center text-white/80 text-sm">
                     {isInstructorForm ? "Want to sign up as a user? " : "Want to become an instructor? "}
-                    <span 
-                        className="cursor-pointer font-semibold text-yellow-400 hover:underline" 
-                        onClick={() => {
-                            setIsInstructorForm(!isInstructorForm);
-                            setRole(isInstructorForm ? "user" : "instructor");
-                        }}
+                    <span
+                        className="cursor-pointer font-semibold text-yellow-400 hover:underline"
+                        onClick={() => setIsInstructorForm(!isInstructorForm)}
                     >
                         {isInstructorForm ? "Sign up as User" : "Apply as Instructor"}
                     </span>

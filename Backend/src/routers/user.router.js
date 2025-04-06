@@ -9,7 +9,9 @@ router.post("/login", userController.loginController)
 
 router.get("/profile", userMidleware.authUser ,userController.profileController)
 
-//instructor
-router.post("/instructor-register", userController.instructorRegisterController);
+// // instructor
+// router.post("/instructor-register", userController.instructorRegisterController);
+
+// router.post("/instructor-login", userController.InstructorLoginController)
 
 module.exports = router

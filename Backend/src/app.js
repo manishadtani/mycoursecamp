@@ -3,6 +3,7 @@ const app = express()
 const cors = require("cors")
 
 const userRouter = require("./routers/user.router")
+const instructorRouter = require("./routers/instructor.router")
 const adminRouter = require("./routers/admin.router")
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -14,7 +15,7 @@ app.use(cors({
   }));
 
 app.use('/user', userRouter)
-
+// app.use('/instructor', instructorRouter)
 app.use("/admin", adminRouter)
 
 module.exports = app;
