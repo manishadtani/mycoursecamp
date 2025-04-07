@@ -14,21 +14,20 @@ export default function SignupForm() {
     const [isInstructorForm, setIsInstructorForm] = useState(false);
     const [error, setError] = useState('');
 
-    // 🔁 Automatically update role based on form type
     useEffect(() => {
         setRole(isInstructorForm ? "instructor" : "user");
     }, [isInstructorForm]);
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         console.log("Sending data:", { username, email, password, role });
 
-        e.preventDefault();
         try {
             const resp = await axios.post('http://127.0.0.1:3000/user/register', {
                 username,
                 email,
                 password,
-                role  
+                role
             });
             localStorage.setItem('token', resp.data.token);
             navigate("/profile");
@@ -127,6 +126,27 @@ export default function SignupForm() {
                         {isInstructorForm ? "Sign up as User" : "Apply as Instructor"}
                     </span>
                 </p>
+
+                {/* 🔽 Added Login Buttons */}
+                <p className="mt-4 text-center text-white/80 text-sm">
+                    Already have an account?
+                </p>
+                <div className="mt-2 flex justify-center gap-4">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        onClick={() => navigate('/login')} // 👈 user login route
+                        className="rounded-xl bg-white/20 text-white px-4 py-2 text-sm font-medium hover:bg-white/30 transition border border-white/30"
+                    >
+                        Login as User
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        onClick={() => navigate('/admin/login')} // 👈 instructor/admin login route
+                        className="rounded-xl bg-white/20 text-white px-4 py-2 text-sm font-medium hover:bg-white/30 transition border border-white/30"
+                    >
+                        Login as Instructor
+                    </motion.button>
+                </div>
             </motion.div>
         </div>
     );
