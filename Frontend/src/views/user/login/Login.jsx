@@ -25,7 +25,7 @@ export default function Login() {
             });
 
             localStorage.setItem("token", res.data.token);
-            navigate("/profile");
+            navigate("/instructorprofile");
             setEmail('');
             setPassword('');
         } catch (err) {
